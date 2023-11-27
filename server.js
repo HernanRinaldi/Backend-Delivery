@@ -1,41 +1,55 @@
-/*=============================== CREACION DE SERVER  ================================== */
-
-
-const { log } = require('console');
-const express = require('express');
+const express = require("express");
 const app = express();
-const http = require('http');
+const http = require("http");
 const server = http.createServer(app);
-const logger = require('morgan');
-const cors = require('cors');
+const logger = require("morgan");
+const cors = require("cors");
 
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(cors());
-app.disable('x-powered-by');
+/*
+ * IMPORTAR RUTAS
+ */
+const usersRoutes = require("./routes/userRoute");
 
 const port = process.env.PORT || 3000;
-app.set('port', port);
 
-server.listen(port, function(){
-    console.log('aplicacion de Node corriendo...' );
-})
+app.use(logger("dev"));
+app.use(express.json());
+app.use(
+  express.urlencoded({
+    extended: true,
+  })
+);
 
-app.get( '/', ( req, res )=>{
-    res.send('ruta raiz del back');
-} )
+app.use(cors());
 
-app.get( '/test', ( req, res )=>{
-    res.send('ruta usada para TEST');
-} )
+app.disable("x-powered-by");
 
-app.use( ( error, req, res, next )=>{
-    console.log(error)
-    res.status(error.status || 500).send(error.stack)
-} )
+app.set("port", port);
+
+/*
+ * LLAMADO DE LAS RUTAS
+ */
+usersRoutes(app);
+
+server.listen(3000, function () {
+  console.log("Aplicacion de NodeJS " + port + " Iniciada...");
+});
+
+// ERROR HANDLER
+app.use((err, req, res, next) => {
+  console.log(err);
+  res.status(err.status || 500).send(err.stack);
+});
+
+app.get("/", (req, res) => {
+  res.send("Ruta raiz del backend");
+});
 
 module.exports = {
-    app: app,
-    server: server
-}
+  app: app,
+  server: server,
+};
+
+// 200 - ES UN RESPUESTA EXITOSA
+// 404 - SIGNIFICA QUE LA URL NO EXISTE
+// 500 - ERROR INTERNO DEL SERVIDOR
