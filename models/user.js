@@ -1,5 +1,4 @@
 
-
 const db = require('../config/config');
 
 const User = {};
