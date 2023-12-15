@@ -2,6 +2,35 @@ const db = require("../config/config");
 const crypt_password = require("bcryptjs");
 const User = {};
 
+User.findByEmail = ( email, result )=>{
+  const sql = `
+  SELECT
+    id,
+    email,
+    lastname,
+    image,
+    password,
+  FROM
+    users
+  WHERE
+    email: ?
+  `
+db.query(
+  sql,
+  [email],
+  (err, user) => {
+    if (err) {
+      console.log("Error:", err);
+      result(err, null);
+    } else {
+      console.log("Usuario obtenido: ", user);
+      result(null, user);
+    }
+  }
+)
+
+}
+
 User.findById = ( id, result )=>{
   const sql = `
   SELECT
