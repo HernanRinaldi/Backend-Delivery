@@ -2,7 +2,7 @@ const db = require("../config/config");
 const crypt_password = require("bcryptjs");
 const User = {};
 
-User.findByEmail = ( email, result )=>{
+User.findByEmail = (email, result) => {
   const sql = `
   SELECT
     id,
@@ -14,11 +14,8 @@ User.findByEmail = ( email, result )=>{
     users
   WHERE
     email: ?
-  `
-db.query(
-  sql,
-  [email],
-  (err, user) => {
+  `;
+  db.query(sql, [email], (err, user) => {
     if (err) {
       console.log("Error:", err);
       result(err, null);
@@ -26,12 +23,10 @@ db.query(
       console.log("Usuario obtenido: ", user);
       result(null, user);
     }
-  }
-)
+  });
+};
 
-}
-
-User.findById = ( id, result )=>{
+User.findById = (id, result) => {
   const sql = `
   SELECT
     id,
@@ -43,11 +38,8 @@ User.findById = ( id, result )=>{
     users
   WHERE
     id: ?
-  `
-db.query(
-  sql,
-  [id],
-  (err, user) => {
+  `;
+  db.query(sql, [id], (err, user) => {
     if (err) {
       console.log("Error:", err);
       result(err, null);
@@ -55,10 +47,8 @@ db.query(
       console.log("Usuario obtenido: ", user);
       result(null, user);
     }
-  }
-)
-
-}
+  });
+};
 
 User.create = (user, result) => {
   const hash = crypt_password.hash(user.password, 10);
